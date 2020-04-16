@@ -22,6 +22,8 @@
 
 #include <tesla.hpp>
 
+#include "json.hpp"
+
 namespace web {
 
     size_t StringWrite(const char *contents, size_t size, size_t nmemb, std::string *userp) {
@@ -54,21 +56,21 @@ namespace web {
         curl_mimepart *file_part = curl_mime_addpart(mime);
 
         curl_mime_filename(file_part, "switch.jpg");
-        curl_mime_name(file_part, "fileToUpload");
+        curl_mime_name(file_part, "image");
         curl_mime_data(file_part, (const char *)imgBuffer, actualSize);
 
-        curl_mimepart *part = curl_mime_addpart(mime);
-        curl_mime_name(part, "curl");
-        curl_mime_data(part, "1", CURL_ZERO_TERMINATED);
-
         std::string urlresponse = std::string();
+
+        curl_slist *chunk = NULL;
+        chunk = curl_slist_append(chunk, "Authorization: Client-ID client_id_here");
 
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, StringWrite);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&urlresponse);
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
-        curl_easy_setopt(curl, CURLOPT_URL, "https://lewd.pics/p/index.php");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.imgur.com/3/image");
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
 
         CURLcode res = CURLE_OK;
         tsl::hlp::doWithSmSession([&] {
@@ -78,12 +80,20 @@ namespace web {
         long http_code = 0;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
+        // For when you need to debug something, you also need to #include <fstream>
+        // fsdevMountSdmc();
+        // std::ofstream of("sdmc:/sharenx.log");
+        // of.write(urlresponse.c_str(), urlresponse.size());
+        // of.close();
+        // fsdevUnmountDevice("sdmc");
+
         if (res != CURLE_OK) {
             urlresponse = "curl failed " + std::to_string(res);
         } else if (http_code != 200) {
             urlresponse = "failed with " + std::to_string(http_code);
-        } else if (urlresponse.size() > 0x30) {
-            urlresponse = "result too long";
+        } else {
+            nlohmann::json j = nlohmann::json::parse(urlresponse);
+            urlresponse = j["data"]["link"]; // Should always be set because http_code == 200
         }
 
         free(imgBuffer);
