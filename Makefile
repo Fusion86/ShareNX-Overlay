@@ -44,7 +44,7 @@ TARGET		:=	ovlShareNX
 BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data
-INCLUDES	:=	libs/include
+INCLUDES	:=	libs/libtesla/include
 
 ifeq ($(RELEASE),)
 	APP_VERSION	:=	$(APP_VERSION)-$(shell git describe --dirty --always)

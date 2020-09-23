@@ -1,15 +1,23 @@
 # ShareNX Overlay
-ShareNX as an overlay for the Nintendo Switch.<br><br>
+
+ShareNX as an overlay for the Nintendo Switch.  
 Share your last screenshot while ingame.
 
-![Zelda](/images/Zelda.jpg)
-![Mario](/images/Mario.jpg)
-
 ## How-to
-This Homebrew runs under [nx-ovlloader](https://github.com/WerWolv/nx-ovlloader/releases).<br>
-Put the .ovl from the release inside /switch/.overlays and start it from "Tesla Menu".<br>
+
+This Homebrew runs under [nx-ovlloader](https://github.com/WerWolv/nx-ovlloader/releases).  
+Put the .ovl from the release inside /switch/.overlays and start it from "Tesla Menu".
+
+## Development
+
+Required devKitPro packages:
+
+- switch-dev
+- switch-curl
+- switch-mbedtls
 
 ## Credits
-[WerWolv](https://github.com/WerWolv) for nx-ovlloader, libtesla and the template<br>
-[averne](https://github.com/averne) for his work on libtesla<br>
-[natinusala](https://github.com/natinusala) for his work on libtesla<br>
+
+- [WerWolv](https://github.com/WerWolv) for nx-ovlloader, libtesla and the template
+- [averne](https://github.com/averne) for his work on libtesla
+- [natinusala](https://github.com/natinusala) for his work on libtesla
